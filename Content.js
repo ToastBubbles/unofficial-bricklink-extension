@@ -32,7 +32,7 @@ function toggleFeature(key, enabled) {
         let qtyCell = cells[5]
 
 
-        if (qtyCell) {
+        if (qtyCell && i > 1) {
             if (highlightQty && Number(qtyCell.textContent)) {
                 if (Number(qtyCell.textContent) > 1) {
 
