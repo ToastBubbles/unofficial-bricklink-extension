@@ -1,5 +1,3 @@
-console.log("LOADED!");
-
 let table = document.getElementsByClassName('mainPrintList')[0]
 
 // Get the tbody inside the table
@@ -23,32 +21,60 @@ function toggleFeature(key, enabled) {
     for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
 
-        if (highlightUsedParts || highlightNewParts) {
-            let cells = row.getElementsByTagName('td');
-            let conditionCell;
-            for (let j = 0; j < cells.length; j++) {
-                if (cells[j].getAttribute('align') === 'CENTER') {
-                    conditionCell = cells[j].children[0];
-                    break; // Stop the loop once the condition is met
-                }
-            }
-            if (conditionCell) {
-                let conditionText = conditionCell.textContent.trim();
-                if ((highlightUsedParts && conditionText === "Used") || (highlightNewParts && conditionText === "New")) {
-                    conditionCell.style.backgroundColor = "yellow";
-                    conditionCell.style.padding = '0.5em';
-                } else {
-                    conditionCell.style.backgroundColor = "transparent";
-                    conditionCell.style.padding = '0';
-                }
+        // if (highlightUsedParts || highlightNewParts) {
+        //     let cells = row.getElementsByTagName('td');
+        //     let conditionCell;
+        //     for (let j = 0; j < cells.length; j++) {
+        //         if (cells[j].getAttribute('align') === 'CENTER') {
+        //             conditionCell = cells[j].children[0];
+        //             break; // Stop the loop once the condition is met
+        //         }
+        //     }
+        //     if (conditionCell) {
+        //         let conditionText = conditionCell.textContent.trim();
+        //         if ((highlightUsedParts && conditionText === "Used")) {
+        //             conditionCell.style.backgroundColor = "yellow";
+        //             conditionCell.style.padding = '0.5em';
+        //         } else if ((highlightNewParts && conditionText === "New")) {
+        //             conditionCell.style.backgroundColor = "cyan";
+        //             conditionCell.style.padding = '0.5em';
+        //         } else {
+        //             conditionCell.style.backgroundColor = "transparent";
+        //             conditionCell.style.padding = '0';
+        //         }
+        //     }
+        // }
+
+        let cells = row.getElementsByTagName('td');
+        let conditionCell;
+        for (let j = 0; j < cells.length; j++) {
+            if (cells[j].getAttribute('align') === 'CENTER') {
+                conditionCell = cells[j].children[0];
+                break; // Stop the loop once the condition is met
             }
         }
+        if (conditionCell) {
+            let conditionText = conditionCell.textContent.trim();
+            if ((highlightUsedParts && conditionText === "Used")) {
+                conditionCell.style.backgroundColor = "yellow";
+                conditionCell.style.padding = '0.5em';
+            } else if ((highlightNewParts && conditionText === "New")) {
+                conditionCell.style.backgroundColor = "cyan";
+                conditionCell.style.padding = '0.5em';
+            } else {
+                conditionCell.style.backgroundColor = "transparent";
+                conditionCell.style.padding = '0';
+            }
+        }
+
     }
 }
 
 // Listen for messages from the popup script
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    // console.log("got message", message.action);
     if (message.action === 'toggleFeature') {
+        console.log(message);
         toggleFeature(message.key, message.enabled);
     }
 });
