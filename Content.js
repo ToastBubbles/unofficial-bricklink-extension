@@ -32,9 +32,11 @@ function toggleFeature(key, enabled) {
             let conditionText = conditionCell.textContent.trim();
             if ((highlightUsedParts && conditionText === "Used")) {
                 conditionCell.style.backgroundColor = "yellow";
+                conditionCell.style.borderRadius = "1em"
                 conditionCell.style.padding = '0.5em';
             } else if ((highlightNewParts && conditionText === "New")) {
                 conditionCell.style.backgroundColor = "cyan";
+                conditionCell.style.borderRadius = "1em"
                 conditionCell.style.padding = '0.5em';
             } else {
                 conditionCell.style.backgroundColor = "transparent";
@@ -101,7 +103,11 @@ for (let i = 0; i < rows.length; i++) {
                 qtyCell.textContent = ""
                 let boldChild = document.createElement("b")
                 boldChild.textContent = value
-                boldChild.style.textDecoration = "underline"
+                boldChild.style.backgroundColor = "orange"
+                boldChild.style.padding = "0.25em"
+                boldChild.style.borderRadius = "1em"
+
+
                 qtyCell.appendChild(boldChild)
             }
         }
