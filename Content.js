@@ -20,31 +20,6 @@ function toggleFeature(key, enabled) {
     // Apply highlighting based on the updated states
     for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
-
-        // if (highlightUsedParts || highlightNewParts) {
-        //     let cells = row.getElementsByTagName('td');
-        //     let conditionCell;
-        //     for (let j = 0; j < cells.length; j++) {
-        //         if (cells[j].getAttribute('align') === 'CENTER') {
-        //             conditionCell = cells[j].children[0];
-        //             break; // Stop the loop once the condition is met
-        //         }
-        //     }
-        //     if (conditionCell) {
-        //         let conditionText = conditionCell.textContent.trim();
-        //         if ((highlightUsedParts && conditionText === "Used")) {
-        //             conditionCell.style.backgroundColor = "yellow";
-        //             conditionCell.style.padding = '0.5em';
-        //         } else if ((highlightNewParts && conditionText === "New")) {
-        //             conditionCell.style.backgroundColor = "cyan";
-        //             conditionCell.style.padding = '0.5em';
-        //         } else {
-        //             conditionCell.style.backgroundColor = "transparent";
-        //             conditionCell.style.padding = '0';
-        //         }
-        //     }
-        // }
-
         let cells = row.getElementsByTagName('td');
         let conditionCell;
         for (let j = 0; j < cells.length; j++) {
@@ -94,20 +69,6 @@ chrome.storage.sync.get(['highlightUsed', 'highlightNew'], function (data) {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 for (let i = 0; i < rows.length; i++) {
     if (i == 0) {
         let row = rows[i];
@@ -133,28 +94,38 @@ for (let i = 0; i < rows.length; i++) {
             if (this.checked) {
                 // Apply strikethrough style to text in the current row
                 let cells = row.getElementsByTagName('td');
-                for (let j = 0; j < cells.length; j++) {
-                    cells[j].style.textDecoration = 'line-through';
+                let fonts = row.getElementsByTagName('font');
+                for (let f = 0; f < fonts.length; f++) {
+                    fonts[f].setAttribute("color", "#999999")
                 }
+
+                for (let j = 0; j < cells.length; j++) {
+                    if (j != 2)
+                        cells[j].style.color = "#999999"
+
+                }
+                cells[2].children[0].style.opacity = '0.2'
+                let img = cells[1].getElementsByTagName('img')[0]
+                img.style.opacity = '0.5';
+                cells[3].style.textDecoration = 'line-through';
             } else {
                 // Remove strikethrough style
                 let cells = row.getElementsByTagName('td');
+                let fonts = row.getElementsByTagName('font');
+                for (let f = 0; f < fonts.length; f++) {
+                    fonts[f].setAttribute("color", "#000")
+                }
                 for (let j = 0; j < cells.length; j++) {
                     cells[j].style.textDecoration = 'none';
+                    cells[j].style.color = "inherit"
+
                 }
+                cells[2].children[0].style.opacity = '1'
+                let img = cells[1].getElementsByTagName('img')[0]
+                img.style.opacity = '1';
             }
         });
-        // console.log(highlightUsedParts);
-        // if (highlightUsedParts) {
 
-        //     let cells = row.getElementsByTagName('td');
-        //     let conditionCell = cells[1].children[0]
-
-        //     if (conditionCell && conditionCell.textContent.trim() == "Used") {
-        //         conditionCell.style.backgroundColor = "yellow"
-        //         conditionCell.style.padding = '0.5em'
-        //     }
-        // }
         newCell.appendChild(checkbox);
         row.insertBefore(newCell, row.firstChild);
     }
