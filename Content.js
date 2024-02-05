@@ -89,6 +89,23 @@ for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
         let newCell = document.createElement('td');
         let checkbox = document.createElement('input');
+        let initialCells = row.getElementsByTagName('td');
+
+        if (initialCells) {
+            let qtyCell = initialCells[4]
+            console.log(qtyCell);
+            if (qtyCell && Number(qtyCell.textContent) > 1) {
+                // qtyCell.style.fontWeight = '00'
+                // qtyCell.style.color = 'red'
+                let value = Number(qtyCell.textContent)
+                qtyCell.textContent = ""
+                let boldChild = document.createElement("b")
+                boldChild.textContent = value
+                boldChild.style.textDecoration = "underline"
+                qtyCell.appendChild(boldChild)
+            }
+        }
+
         checkbox.setAttribute('type', 'checkbox');
         checkbox.addEventListener('change', function () {
             if (this.checked) {
