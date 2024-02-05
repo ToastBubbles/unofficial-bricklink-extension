@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "permissions": ["storage"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "extensionIcon.png"
+    }
   },
   "content_scripts": [
     {
