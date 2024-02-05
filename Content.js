@@ -8,6 +8,7 @@ let rows = tbody.children
 
 let highlightUsedParts = false;
 let highlightNewParts = false;
+let highlightQty = false;
 
 // Function to toggle the feature based on the enabled state
 function toggleFeature(key, enabled) {
@@ -16,11 +17,52 @@ function toggleFeature(key, enabled) {
     } else if (key === 'highlightNew') {
         highlightNewParts = enabled;
     }
+    else if (key === 'highlightQty') {
+        highlightQty = enabled;
+    }
 
     // Apply highlighting based on the updated states
     for (let i = 0; i < rows.length; i++) {
         let row = rows[i];
         let cells = row.getElementsByTagName('td');
+
+
+
+
+        let qtyCell = cells[5]
+
+
+        if (qtyCell) {
+            if (highlightQty && Number(qtyCell.textContent)) {
+                if (Number(qtyCell.textContent) > 1) {
+
+                    let value = Number(qtyCell.textContent)
+                    qtyCell.textContent = ""
+                    let boldChild = document.createElement("b")
+                    boldChild.textContent = value
+                    boldChild.style.backgroundColor = "orange"
+                    boldChild.style.padding = "0.25em"
+                    boldChild.style.borderRadius = "1em"
+
+
+                    qtyCell.appendChild(boldChild)
+                }
+            } else {
+
+                let boldChild = qtyCell.children[0]
+
+                if (boldChild) {
+
+                    let value = boldChild.textContent
+                    boldChild.remove()
+                    qtyCell.innerText = value
+                }
+
+
+            }
+        }
+
+
         let conditionCell;
         for (let j = 0; j < cells.length; j++) {
             if (cells[j].getAttribute('align') === 'CENTER') {
@@ -57,17 +99,20 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 // Load the initial state of the features
-chrome.storage.sync.get(['highlightUsed', 'highlightNew'], function (data) {
+chrome.storage.sync.get(['highlightUsed', 'highlightNew', 'highlightQty'], function (data) {
     if (data.highlightUsed !== undefined) {
         highlightUsedParts = data.highlightUsed;
     }
     if (data.highlightNew !== undefined) {
         highlightNewParts = data.highlightNew;
     }
-
+    if (data.highlightQty !== undefined) {
+        highlightQty = data.highlightQty;
+    }
     // Apply highlighting based on the initial states
     toggleFeature('highlightUsed', highlightUsedParts);
     toggleFeature('highlightNew', highlightNewParts);
+    toggleFeature('highlightQty', highlightQty);
 });
 
 
@@ -87,30 +132,10 @@ for (let i = 0; i < rows.length; i++) {
         let td2 = row.children[1];
         td2.setAttribute("colspan", "6")
     }
-    else {
+    else if (i <= rows.length - 3) {
         let row = rows[i];
         let newCell = document.createElement('td');
         let checkbox = document.createElement('input');
-        let initialCells = row.getElementsByTagName('td');
-
-        if (initialCells) {
-            let qtyCell = initialCells[4]
-            console.log(qtyCell);
-            if (qtyCell && Number(qtyCell.textContent) > 1) {
-                // qtyCell.style.fontWeight = '00'
-                // qtyCell.style.color = 'red'
-                let value = Number(qtyCell.textContent)
-                qtyCell.textContent = ""
-                let boldChild = document.createElement("b")
-                boldChild.textContent = value
-                boldChild.style.backgroundColor = "orange"
-                boldChild.style.padding = "0.25em"
-                boldChild.style.borderRadius = "1em"
-
-
-                qtyCell.appendChild(boldChild)
-            }
-        }
 
         checkbox.setAttribute('type', 'checkbox');
         checkbox.addEventListener('change', function () {
@@ -123,11 +148,12 @@ for (let i = 0; i < rows.length; i++) {
                 }
 
                 for (let j = 0; j < cells.length; j++) {
-                    if (j != 2)
+                    if (j != 2 && j != 5)
                         cells[j].style.color = "#999999"
 
                 }
                 cells[2].children[0].style.opacity = '0.2'
+                cells[5].style.opacity = '0.2'
                 let img = cells[1].getElementsByTagName('img')[0]
                 img.style.opacity = '0.5';
                 cells[3].style.textDecoration = 'line-through';
@@ -144,6 +170,7 @@ for (let i = 0; i < rows.length; i++) {
 
                 }
                 cells[2].children[0].style.opacity = '1'
+                cells[5].style.opacity = '1'
                 let img = cells[1].getElementsByTagName('img')[0]
                 img.style.opacity = '1';
             }
@@ -151,6 +178,10 @@ for (let i = 0; i < rows.length; i++) {
 
         newCell.appendChild(checkbox);
         row.insertBefore(newCell, row.firstChild);
+    } else {
+        let row = rows[i];
+        let td2 = row.children[0];
+        td2.setAttribute("colspan", "4")
     }
 
 }

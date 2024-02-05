@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Unofficial Bricklink Extension",
+  "name": "Unofficial Bricklink Seller Tool",
   "version": "1.0.0",
   "permissions": ["storage"],
   "action": {
