@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Unofficial Bricklink Seller Tool",
-  "description": "A tool that enhances the order detail page for Bricklink sellers.",
-  "version": "1.0.0",
+  "name": "Unofficial Bricklink Expansion Pack",
+  "description": "A tool that adds useful features to Bricklink",
+  "version": "1.0.1",
   "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",

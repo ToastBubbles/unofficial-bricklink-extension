@@ -26,20 +26,42 @@ try {
             showColSearch = enabled;
         }
         if (showColSearch) {
+            let thumbnailBtn = document.getElementById("MPI-thumbnailView-btn")
+            let listBtn = document.getElementById("MPI-listView-btn")
+            function checkLayout() {
+                if (listBtn) {
+
+                    if (listBtn.classList.contains("personal-inventory__nav-view-icon--selected")) {
+                        return "list"
+                    }
+
+                }
+                return "thumbnail"
+
+            }
 
 
 
 
-            console.log("working");
 
-            function increaseItemsPerPage() {
+            // console.log("working");
+
+            function increaseItemsPerPage(applyValueOnly = false) {
+                // console.log(document.querySelectorAll("#MPI-viewPerPage-dropdown").length);
                 let dropdown = document.querySelectorAll("#MPI-viewPerPage-dropdown")[1];
                 if (!dropdown) console.log("Element with ID 'MPI-viewPerPage-dropdown' not found");
-                let increasedView = document.createElement('option');
-                increasedView.textContent = "10000 per page";
-                increasedView.setAttribute("value", '10000');
-                dropdown.appendChild(increasedView);
-                increasedView.selected = true;
+                if (!applyValueOnly) {
+                    let increasedView = document.createElement('option');
+                    increasedView.textContent = "10000 per page";
+                    increasedView.value = '10000'
+                    dropdown.appendChild(increasedView);
+                    increasedView.selected = true;
+                } else {
+                    // console.log("applying");
+                    let option = dropdown.lastChild
+                    // console.log(option);
+                    option.selected = true
+                }
             }
             increaseItemsPerPage()
 
@@ -50,41 +72,49 @@ try {
             let childSections = container.getElementsByTagName("section");
 
             let allItems = []
-            let items = []
+            let preceedingElement
+
 
             let newSearchConatiner = generateSearchbar()
 
             container.insertBefore(newSearchConatiner, childSections[childSections.length - 1])
 
-            // console.log("*************");
-            // console.log(container);
-            // console.log("*************");
-            // console.log(newSearchConatiner);
-            // console.log("*************");
-            // console.log(childSections[childSections.length - 1]);
-            // console.log("*************");
 
             let inventoryContainer
             function reload() {
                 allItems = []
-                items = []
-                console.log("reloading");
+
+                // console.log("reloading");
+
                 let sb = document.getElementById("my-collection-searchbar")
                 if (sb) sb.value = ''
                 fetchInventoryData().then(() => {
-                    inventoryContainer = childSections[childSections.length - 1].lastElementChild
-                    // console.log(inventoryContainer);
+                    increaseItemsPerPage(true)
+                    let layout = checkLayout()
+                    if (layout == "thumbnail") {
+                        inventoryContainer = childSections[childSections.length - 1].lastElementChild
+                    } else {
+                        inventoryContainer = childSections[childSections.length - 1]
+                    }
 
-                    for (let i = 0; i < inventoryContainer.children.length; i++) {
-                        let infoNode = inventoryContainer.children[i].children[2]
-                        // let partNumber = infoNode.firstChild.firstChild.textContent
-                        let partName = infoNode.firstChild.textContent.split(': ').join('');
-                        let color = infoNode.lastChild.textContent
-                        allItems.push({
-                            id: i,
-                            element: inventoryContainer.children[i],
-                            content: `${partName} ${color}`
-                        })
+                    if (inventoryContainer.parentNode.id != "MPI-nothingToShow-text") {
+                        if (sb) sb.disabled = false
+                        // console.log(inventoryContainer.children.length);
+                        for (let i = 0; i < inventoryContainer.children.length; i++) {
+                            if (layout == "list" && i == 0) { preceedingElement = inventoryContainer.children[i]; continue }
+                            let infoNode = inventoryContainer.children[i].children[2]
+                            // let partNumber = infoNode.firstChild.firstChild.textContent
+                            let partName = infoNode.firstChild.textContent.split(': ').join('');
+                            let color = infoNode.lastChild.textContent
+                            allItems.push({
+                                id: i,
+                                element: inventoryContainer.children[i],
+                                content: `${partName} ${color}`
+                            })
+                        }
+                    } else {
+                        console.log("no items!");
+                        if (sb) sb.disabled = true
                     }
                 });
             }
@@ -152,9 +182,13 @@ try {
                 return section;
             }
             function updateUI(filteredItems) {
+                let layout = checkLayout()
                 // Clear the current UI
                 inventoryContainer.innerHTML = '';
-                // console.log(filteredItems);
+
+              
+
+                if (layout == "list" && preceedingElement) inventoryContainer.appendChild(preceedingElement)
 
                 // Rebuild the UI with filtered items
                 filteredItems.forEach(item => {
@@ -162,7 +196,7 @@ try {
                 });
             }
 
-            function addEventListenerToTabs() {
+            function addEventListeners() {
                 let tabSets = document.getElementById("MPI-nav-mySets"),
                     tabParts = document.getElementById("MPI-nav-myParts"),
                     tabMinifigs = document.getElementById("MPI-nav-myMinifigures"),
@@ -178,8 +212,15 @@ try {
                     });
                 })
 
+                if (thumbnailBtn) thumbnailBtn.addEventListener('click', function (event) {
+                    reload()
+                });
+                if (listBtn) listBtn.addEventListener('click', function (event) {
+                    reload()
+                });
+
             }
-            addEventListenerToTabs()
+            addEventListeners()
 
 
 
