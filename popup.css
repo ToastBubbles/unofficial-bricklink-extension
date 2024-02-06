@@ -1,7 +1,7 @@
 body {
   font-family: Arial, sans-serif;
   padding: 20px;
-  width: 15em;
+  width: 25em;
 }
 
 h1 {
@@ -21,4 +21,13 @@ label {
 }
 .jc-between {
   justify-content: space-between;
+}
+.flex-col {
+  flex-direction: column;
+}
+.w-100 {
+  width: 100%;
+}
+.fg-1 {
+  flex-grow: 1;
 }

@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let checkboxNew = document.getElementById('checkboxNew');
     let checkboxQty = document.getElementById('checkboxQty');
     let checkboxCol = document.getElementById('checkboxColSearch');
+    // let externalTrackingUrlBtn = document.getElementById('externalTrackingUrlBtn')
     let status = document.getElementById('status');
 
     // Load checkbox state from Chrome storage
@@ -19,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (data.showColSearch !== undefined) {
             checkboxCol.checked = data.showColSearch;
         }
+        // if (data.externalTrackingUrl !== undefined) {
+        //     externalTrackingUrl.value = data.externalTrackingUrl
+        // }
     });
 
     // Add event listener to checkboxUsed
@@ -43,6 +47,12 @@ document.addEventListener('DOMContentLoaded', function () {
         let isChecked = checkboxCol.checked;
         updateCheckboxState('showColSearch', isChecked);
     });
+    // Add event listener to checkboxUsed
+    // externalTrackingUrlBtn.addEventListener('click', function () {
+    //     // let isChecked = checkboxCol.checked;
+    //     let url = document.getElementById('externalTrackingUrl').value
+    //     updateCheckboxState('externalTrackingUrl', url);
+    // });
 
     // Function to update checkbox state in Chrome storage and send message to content script
     function updateCheckboxState(storageKey, isChecked) {
@@ -61,4 +71,5 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 2000);
         });
     }
+
 });

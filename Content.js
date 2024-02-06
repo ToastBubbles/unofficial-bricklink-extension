@@ -9,6 +9,7 @@ let rows = tbody.children
 let highlightUsedParts = false;
 let highlightNewParts = false;
 let highlightQty = false;
+let externalTrackingSite = "https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1={n}"
 
 // Function to toggle the feature based on the enabled state
 function toggleFeature(key, enabled) {
@@ -184,4 +185,43 @@ for (let i = 0; i < rows.length; i++) {
         td2.setAttribute("colspan", "4")
     }
 
+}
+
+if (externalTrackingSite) {
+    let tdElement = document.querySelector('td[width="40%"]');
+
+    if (tdElement) {
+        let trackingTR = tdElement.firstElementChild.firstElementChild.lastElementChild
+        if (trackingTR) {
+
+            if (trackingTR.firstElementChild.textContent.includes("Tracking")) {
+
+                if (trackingTR.lastElementChild.textContent.length > 1) {
+                    let trackingNo = trackingTR.lastElementChild.textContent.trim()
+                    console.log(trackingNo);
+                    if (trackingNo) {
+                        let hyperlinkData = generateHyperlink(trackingNo)
+                        if (hyperlinkData.success) {
+
+                            let hyperlink = document.createElement('a')
+                            hyperlink.href = hyperlinkData.url
+                            hyperlink.textContent = trackingNo
+                            hyperlink.target = "_blank"
+                            trackingTR.lastElementChild.innerHTML = ""
+                            trackingTR.lastElementChild.appendChild(hyperlink)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function generateHyperlink(trackingNo) {
+    let url = externalTrackingSite
+    if (url.includes("{n}")) {
+
+        return { url: url.replace("{n}", trackingNo), success: true }
+    }
+    return { url: trackingNo, success: false }
 }
