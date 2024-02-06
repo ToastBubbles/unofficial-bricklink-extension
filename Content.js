@@ -219,9 +219,35 @@ if (externalTrackingSite) {
 
 function generateHyperlink(trackingNo) {
     let url = externalTrackingSite
+
     if (url.includes("{n}")) {
 
-        return { url: url.replace("{n}", trackingNo), success: true }
+        return { url: url.replace("{n}", formatTrackingNumber(trackingNo)), success: true }
     }
     return { url: trackingNo, success: false }
+}
+
+function formatTrackingNumber(trackingNo) {
+    let arr = trackingNo.split(" ")
+
+    if (arr.length == 1) return trackingNo
+
+    let output = ""
+
+    for (let i = 0; i < arr.length; i++) {
+
+        if (parseInt(arr[i])) {
+            output += arr[i]
+
+        } else {
+            if (output.length > 6) {
+                break
+            } else {
+                output = arr[0]
+                break
+            }
+
+        }
+    }
+    return output
 }
