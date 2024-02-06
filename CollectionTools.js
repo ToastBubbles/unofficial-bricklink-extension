@@ -21,13 +21,25 @@ try {
     let allItems = []
     let items = []
 
+    let newSearchConatiner = generateSearchbar()
 
+    container.insertBefore(newSearchConatiner, childSections[childSections.length - 1])
+
+    // console.log("*************");
+    // console.log(container);
+    // console.log("*************");
+    // console.log(newSearchConatiner);
+    // console.log("*************");
+    // console.log(childSections[childSections.length - 1]);
+    // console.log("*************");
 
     let inventoryContainer
     function reload() {
         allItems = []
         items = []
         console.log("reloading");
+        let sb = document.getElementById("my-collection-searchbar")
+        if (sb) sb.value = ''
         fetchInventoryData().then(() => {
             inventoryContainer = childSections[childSections.length - 1].lastElementChild
             // console.log(inventoryContainer);
@@ -42,20 +54,15 @@ try {
                     element: inventoryContainer.children[i],
                     content: `${partName} ${color}`
                 })
-
-
             }
-
-
         });
     }
     reload()
 
-    let newSearchConatiner = generateSearchbar()
 
-    container.insertBefore(newSearchConatiner, childSections[childSections.length - 1])
 
     function fetchInventoryData() {
+
         // Simulate an API call with a setTimeout
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -63,7 +70,7 @@ try {
                 // ready = true
 
                 let sb = document.getElementById("my-collection-searchbar")
-                if (sb) sb.disabled = false
+                if (sb) { sb.disabled = false }
 
                 resolve();
             }, 1500); // Adjust the delay as needed
@@ -100,21 +107,6 @@ try {
         searchbar.setAttribute('placeholder', 'Search for parts in your Collection');
         searchbar.setAttribute('id', 'my-collection-searchbar');
 
-        // searchbar.addEventListener('input', function (event) {
-        //     let searchTerm = event.target.value.toLowerCase(); // Get the search term and convert it to lowercase
-        //     console.log(searchTerm);
-
-        //     // Filter items based on the search term
-        //     let filteredItems = items.filter(item => {
-        //         // Check if the item's content string contains the search term
-        //         return item.content.toLowerCase().includes(searchTerm);
-        //     });
-
-        //     // Update the UI to display only the filtered items
-        //     updateUI(filteredItems);
-        // });
-
-
         searchbar.disabled = true
         let button = document.createElement('button');
         button.classList.add("personal-inventory__input-search-magnifier-button", "magnifire-0")
@@ -131,7 +123,7 @@ try {
     function updateUI(filteredItems) {
         // Clear the current UI
         inventoryContainer.innerHTML = '';
-        console.log(filteredItems);
+        // console.log(filteredItems);
 
         // Rebuild the UI with filtered items
         filteredItems.forEach(item => {
