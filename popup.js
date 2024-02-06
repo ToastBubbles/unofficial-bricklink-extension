@@ -2,10 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     let checkboxUsed = document.getElementById('checkboxUsed');
     let checkboxNew = document.getElementById('checkboxNew');
     let checkboxQty = document.getElementById('checkboxQty');
+    let checkboxCol = document.getElementById('checkboxColSearch');
     let status = document.getElementById('status');
 
     // Load checkbox state from Chrome storage
-    chrome.storage.sync.get(['highlightUsed', 'highlightNew', 'highlightQty'], function (data) {
+    chrome.storage.sync.get(['highlightUsed', 'highlightNew', 'highlightQty', 'showColSearch'], function (data) {
         if (data.highlightUsed !== undefined) {
             checkboxUsed.checked = data.highlightUsed;
         }
@@ -14,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (data.highlightQty !== undefined) {
             checkboxQty.checked = data.highlightQty;
+        }
+        if (data.showColSearch !== undefined) {
+            checkboxCol.checked = data.showColSearch;
         }
     });
 
@@ -33,6 +37,11 @@ document.addEventListener('DOMContentLoaded', function () {
     checkboxQty.addEventListener('change', function () {
         let isChecked = checkboxQty.checked;
         updateCheckboxState('highlightQty', isChecked);
+    });
+    // Add event listener to checkboxUsed
+    checkboxCol.addEventListener('change', function () {
+        let isChecked = checkboxCol.checked;
+        updateCheckboxState('showColSearch', isChecked);
     });
 
     // Function to update checkbox state in Chrome storage and send message to content script
