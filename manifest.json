@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Unofficial Bricklink Expansion Pack",
+  "name": "Unofficial Bricklink Booster Pack",
   "description": "A tool that adds useful features to Bricklink",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
