@@ -138,6 +138,10 @@ for (let i = 0; i < rows.length; i++) {
         let newCell = document.createElement('td');
         let checkbox = document.createElement('input');
 
+        let hyperlink = row.children[2].getElementsByTagName("a")[0]
+        hyperlink.target = '_blank'
+        // console.log(hyperlink);
+
         checkbox.setAttribute('type', 'checkbox');
         checkbox.addEventListener('change', function () {
             if (this.checked) {
@@ -198,7 +202,7 @@ if (externalTrackingSite) {
 
                 if (trackingTR.lastElementChild.textContent.length > 1) {
                     let trackingNo = trackingTR.lastElementChild.textContent.trim()
-                    console.log(trackingNo);
+                    // console.log(trackingNo);
                     if (trackingNo) {
                         let hyperlinkData = generateHyperlink(trackingNo)
                         if (hyperlinkData.success) {
@@ -228,6 +232,23 @@ function generateHyperlink(trackingNo) {
 }
 
 function formatTrackingNumber(trackingNo) {
+    /*
+    Basically, this will try to parse domestic tracking numbers 
+    or return the first string to catch international tracking numbers
+
+    94001234567898765432
+
+    ^ will return 94001234567898765432
+
+     9400 12345 67898 7654 32
+
+    ^ will return 94001234567898765432
+    
+    NL12345678DE
+    www.dhl.com/de
+
+    ^ will return NL12345678DE
+    */
     let arr = trackingNo.split(" ")
 
     if (arr.length == 1) return trackingNo
